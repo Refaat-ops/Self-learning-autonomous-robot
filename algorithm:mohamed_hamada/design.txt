@@ -1,0 +1,45 @@
+        Self-learning-autonomous-robot/
+algorithm/mohamed_hamada
+├── .gitignore
+├── platformio.ini
+├── README.md
+├──simulation/
+
+└──source/
+    ├── mega/
+    │   ├── main.cpp
+    │   ├── hal/
+    │   │   ├── ultrasonic.h
+    │   │   ├── ultrasonic.cpp
+    │   │   ├── motor.h
+    │   │   ├── motor.cpp
+    │   │   ├── encoder.h
+    │   │   ├── encoder.cpp
+    │   │   ├── mpu6050_sensor.h
+    │   │   └── mpu6050_sensor.cpp
+    │   ├── com/
+    │   │   ├── uart_comm.h
+    │   │   └── uart_comm.cpp
+    │   └── app/
+    │       ├── sensor_manager.h
+    │       └── sensor_manager.cpp
+    └── esp32/
+        ├── main.cpp
+        ├── hal/
+        │   ├── lidar_serial.h
+        │   └── lidar_serial.cpp
+        ├── com/
+        │   ├── uart_isr.h
+        │   └── uart_isr.cpp
+        ├── app/
+        │   ├── path_planner.h
+        │   ├── path_planner.cpp
+        │   ├── vehicle_state.h
+        │   └── vehicle_state.cpp
+        └── features/
+            ├── dstar_lite.h
+            ├── dstar_lite.cpp
+            ├── teb_planner.h
+            ├── teb_planner.cpp
+            ├── q_learning.h
+            └── q_learning.cpp
