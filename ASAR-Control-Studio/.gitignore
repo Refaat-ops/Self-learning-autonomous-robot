@@ -1,0 +1,8 @@
+node_modules/
+dist/
+package/mobile-app/www/
+package/mobile-app/apk/
+android/.gradle/
+android/app/build/
+*.tsbuildinfo
+quick-apk.log

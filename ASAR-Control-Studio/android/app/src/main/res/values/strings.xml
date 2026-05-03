@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">ASAR Control Studio</string>
+    <string name="title_activity_main">ASAR Control Studio</string>
+    <string name="package_name">com.asar.controlstudio</string>
+    <string name="custom_url_scheme">com.asar.controlstudio</string>
+</resources>

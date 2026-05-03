@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1880" height="2720" viewBox="0 0 1880 2720" role="img" aria-labelledby="title desc">
+  <title id="title">ASAR Control Studio Runtime Data Flow Sequence</title>
+  <desc id="desc">Sequence diagram showing how ASAR Control Studio loads configuration from localStorage, polls ESP32 endpoints, updates UI state, sends pin commands, regenerates the Arduino sketch, and downloads the generated file.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f6fbff" />
+      <stop offset="100%" stop-color="#edf4f7" />
+    </linearGradient>
+    <linearGradient id="header" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#12344a" />
+      <stop offset="100%" stop-color="#1f6b7a" />
+    </linearGradient>
+    <marker id="arrow" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="12" markerHeight="12" orient="auto-start-reverse">
+      <path d="M 0 0 L 12 6 L 0 12 z" fill="#1f2933" />
+    </marker>
+    <marker id="returnArrow" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="12" markerHeight="12" orient="auto-start-reverse">
+      <path d="M 0 0 L 12 6 L 0 12 z" fill="#6b7280" />
+    </marker>
+    <style>
+      text {
+        font-family: "Segoe UI", Arial, sans-serif;
+        fill: #1f2933;
+      }
+      .title {
+        font-size: 30px;
+        font-weight: 700;
+        fill: #ffffff;
+      }
+      .subtitle {
+        font-size: 15px;
+        fill: #d8e7ec;
+      }
+      .lane-title {
+        font-size: 16px;
+        font-weight: 700;
+      }
+      .lane-subtitle {
+        font-size: 12px;
+        fill: #52606d;
+      }
+      .step-label {
+        font-size: 14px;
+        font-weight: 600;
+      }
+      .step-meta {
+        font-size: 12px;
+        fill: #52606d;
+      }
+      .note-title {
+        font-size: 14px;
+        font-weight: 700;
+      }
+      .note-text {
+        font-size: 12px;
+        fill: #334e68;
+      }
+      .footer {
+        font-size: 12px;
+        fill: #52606d;
+      }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="1880" height="2720" fill="url(#bg)" />
+  <rect x="40" y="28" width="1800" height="96" rx="24" fill="url(#header)" />
+  <text x="76" y="70" class="title">ASAR Control Studio Runtime Data Flow</text>
+  <text x="76" y="98" class="subtitle">Observed from src/App.tsx, components, lib/storage.ts, lib/sketch.ts, and the expected ESP32 HTTP contract</text>
+
+  <rect x="40" y="146" width="1800" height="2510" rx="28" fill="#ffffff" stroke="#d9e2ec" stroke-width="2" />
+
+  <g id="lanes">
+    <g transform="translate(80, 188)">
+      <rect x="0" y="0" width="180" height="72" rx="18" fill="#ffe3c2" stroke="#f7b267" stroke-width="2" />
+      <text x="20" y="30" class="lane-title">User</text>
+      <text x="20" y="51" class="lane-subtitle">Operator / developer</text>
+    </g>
+    <g transform="translate(330, 188)">
+      <rect x="0" y="0" width="220" height="72" rx="18" fill="#dff3ff" stroke="#67b7dc" stroke-width="2" />
+      <text x="20" y="30" class="lane-title">UI Panels</text>
+      <text x="20" y="51" class="lane-subtitle">BoardConfig, WidgetStudio, Dashboard, Device, Sketch</text>
+    </g>
+    <g transform="translate(630, 188)">
+      <rect x="0" y="0" width="220" height="72" rx="18" fill="#dff7ea" stroke="#5bbf8a" stroke-width="2" />
+      <text x="20" y="30" class="lane-title">App State</text>
+      <text x="20" y="51" class="lane-subtitle">App.tsx state, effects, fetch logic</text>
+    </g>
+    <g transform="translate(930, 188)">
+      <rect x="0" y="0" width="180" height="72" rx="18" fill="#efe5ff" stroke="#9b7dd4" stroke-width="2" />
+      <text x="20" y="30" class="lane-title">localStorage</text>
+      <text x="20" y="51" class="lane-subtitle">asar-control-studio key</text>
+    </g>
+    <g transform="translate(1190, 188)">
+      <rect x="0" y="0" width="210" height="72" rx="18" fill="#fff1cc" stroke="#d4a72c" stroke-width="2" />
+      <text x="20" y="30" class="lane-title">Sketch Generator</text>
+      <text x="20" y="51" class="lane-subtitle">generateSketch + getSketchFileName</text>
+    </g>
+    <g transform="translate(1480, 188)">
+      <rect x="0" y="0" width="200" height="72" rx="18" fill="#ffe0e5" stroke="#dd6b7b" stroke-width="2" />
+      <text x="20" y="30" class="lane-title">ESP32 HTTP API</text>
+      <text x="20" y="51" class="lane-subtitle">/api/status, /api/logs, /api/pins/:pin</text>
+    </g>
+    <g transform="translate(1740, 188)">
+      <rect x="0" y="0" width="100" height="72" rx="18" fill="#e2ecf9" stroke="#6b8bc3" stroke-width="2" />
+      <text x="14" y="30" class="lane-title">Download</text>
+      <text x="14" y="51" class="lane-subtitle">Blob + anchor</text>
+    </g>
+  </g>
+
+  <g stroke="#9fb3c8" stroke-width="2" stroke-dasharray="8 8">
+    <line x1="170" y1="260" x2="170" y2="2590" />
+    <line x1="440" y1="260" x2="440" y2="2590" />
+    <line x1="740" y1="260" x2="740" y2="2590" />
+    <line x1="1020" y1="260" x2="1020" y2="2590" />
+    <line x1="1295" y1="260" x2="1295" y2="2590" />
+    <line x1="1580" y1="260" x2="1580" y2="2590" />
+    <line x1="1790" y1="260" x2="1790" y2="2590" />
+  </g>
+
+  <g>
+    <rect x="68" y="300" width="1688" height="48" rx="12" fill="#f0f4f8" />
+    <text x="92" y="330" class="step-label">Startup and initial hydration</text>
+
+    <line x1="170" y1="392" x2="440" y2="392" stroke="#1f2933" stroke-width="3" marker-end="url(#arrow)" />
+    <text x="232" y="381" class="step-label">1. Open app</text>
+    <text x="232" y="410" class="step-meta">User loads the Vite/React client</text>
+
+    <line x1="440" y1="470" x2="740" y2="470" stroke="#1f2933" stroke-width="3" marker-end="url(#arrow)" />
+    <text x="498" y="458" class="step-label">2. React mounts App</text>
+    <text x="498" y="488" class="step-meta">createRoot renders App.tsx</text>
+
+    <line x1="740" y1="548" x2="1020" y2="548" stroke="#1f2933" stroke-width="3" marker-end="url(#arrow)" />
+    <text x="788" y="536" class="step-label">3. loadConfig(defaultConfig)</text>
+    <text x="788" y="566" class="step-meta">Reads saved board, pins, widgets, API URL</text>
+
+    <line x1="1020" y1="626" x2="740" y2="626" stroke="#6b7280" stroke-width="3" stroke-dasharray="10 8" marker-end="url(#returnArrow)" />
+    <text x="792" y="614" class="step-label">4. Return JSON or fallback</text>
+    <text x="792" y="644" class="step-meta">Config becomes the source of truth for the session</text>
+
+    <line x1="740" y1="704" x2="1295" y2="704" stroke="#1f2933" stroke-width="3" marker-end="url(#arrow)" />
+    <text x="892" y="692" class="step-label">5. generateSketch(config) + getSketchFileName(config)</text>
+    <text x="892" y="722" class="step-meta">Derives Arduino sketch text directly from config state</text>
+
+    <line x1="1295" y1="782" x2="740" y2="782" stroke="#6b7280" stroke-width="3" stroke-dasharray="10 8" marker-end="url(#returnArrow)" />
+    <text x="876" y="770" class="step-label">6. Return sketch preview and file name</text>
+    <text x="876" y="800" class="step-meta">SketchPanel can render the export immediately</text>
+
+    <line x1="740" y1="860" x2="440" y2="860" stroke="#6b7280" stroke-width="3" stroke-dasharray="10 8" marker-end="url(#returnArrow)" />
+    <text x="470" y="848" class="step-label">7. Render all panels with shared state</text>
+    <text x="470" y="878" class="step-meta">Board config, widget studio, dashboard, device panels, sketch panel</text>
+  </g>
+
+  <g>
+    <rect x="68" y="916" width="1688" height="48" rx="12" fill="#f0f4f8" />
+    <text x="92" y="946" class="step-label">Continuous telemetry loop</text>
+
+    <line x1="740" y1="1010" x2="1580" y2="1010" stroke="#1f2933" stroke-width="3" marker-end="url(#arrow)" />
+    <text x="968" y="998" class="step-label">8. GET /api/status</text>
+    <text x="968" y="1028" class="step-meta">probeDevice runs on mount and every pollIntervalMs</text>
+
+    <line x1="740" y1="1088" x2="1580" y2="1088" stroke="#1f2933" stroke-width="3" marker-end="url(#arrow)" />
+    <text x="978" y="1076" class="step-label">9. GET /api/logs</text>
+    <text x="978" y="1106" class="step-meta">Log request tolerates failure and falls back to []</text>
+
+    <line x1="1580" y1="1166" x2="740" y2="1166" stroke="#6b7280" stroke-width="3" stroke-dasharray="10 8" marker-end="url(#returnArrow)" />
+    <text x="950" y="1154" class="step-label">10. Return status payload and logs</text>
+    <text x="950" y="1184" class="step-meta">online, ip, rssi, freeHeap, uptimeMs, pins[], log entries</text>
+
+    <line x1="740" y1="1244" x2="440" y2="1244" stroke="#6b7280" stroke-width="3" stroke-dasharray="10 8" marker-end="url(#returnArrow)" />
+    <text x="470" y="1232" class="step-label">11. Update UI with live telemetry</text>
+    <text x="470" y="1262" class="step-meta">Dashboard widgets and DevicePanels read the same status/log state</text>
+  </g>
+
+  <g>
+    <rect x="68" y="1300" width="1688" height="48" rx="12" fill="#f0f4f8" />
+    <text x="92" y="1330" class="step-label">Configuration and composition flow</text>
+
+    <line x1="170" y1="1394" x2="440" y2="1394" stroke="#1f2933" stroke-width="3" marker-end="url(#arrow)" />
+    <text x="222" y="1382" class="step-label">12. Edit board fields, pins, or widgets</text>
+    <text x="222" y="1412" class="step-meta">Inputs, toggles, add/remove pin, add/reorder widget, assign pin</text>
+
+    <line x1="440" y1="1472" x2="740" y2="1472" stroke="#1f2933" stroke-width="3" marker-end="url(#arrow)" />
+    <text x="510" y="1460" class="step-label">13. onChange(nextConfig)</text>
+    <text x="510" y="1490" class="step-meta">App replaces the config object in state</text>
+
+    <line x1="740" y1="1550" x2="1020" y2="1550" stroke="#1f2933" stroke-width="3" marker-end="url(#arrow)" />
+    <text x="790" y="1538" class="step-label">14. saveConfig(config)</text>
+    <text x="790" y="1568" class="step-meta">Persist current board profile to localStorage</text>
+
+    <line x1="740" y1="1628" x2="1295" y2="1628" stroke="#1f2933" stroke-width="3" marker-end="url(#arrow)" />
+    <text x="902" y="1616" class="step-label">15. Regenerate sketch from updated config</text>
+    <text x="902" y="1646" class="step-meta">Pin definitions drive setup blocks and route handlers</text>
+
+    <line x1="1295" y1="1706" x2="440" y2="1706" stroke="#6b7280" stroke-width="3" stroke-dasharray="10 8" marker-end="url(#returnArrow)" />
+    <text x="640" y="1694" class="step-label">16. Refresh preview in SketchPanel and dashboard layout</text>
+    <text x="640" y="1724" class="step-meta">State fan-out stays inside App; children receive derived props only</text>
+  </g>
+
+  <g>
+    <rect x="68" y="1762" width="1688" height="48" rx="12" fill="#f0f4f8" />
+    <text x="92" y="1792" class="step-label">Control action and export flow</text>
+
+    <line x1="170" y1="1856" x2="440" y2="1856" stroke="#1f2933" stroke-width="3" marker-end="url(#arrow)" />
+    <text x="236" y="1844" class="step-label">17. Trigger toggle, button, slider, or quick GPIO action</text>
+    <text x="236" y="1874" class="step-meta">DashboardCanvas and DevicePanels both route commands upward</text>
+
+    <line x1="440" y1="1934" x2="740" y2="1934" stroke="#1f2933" stroke-width="3" marker-end="url(#arrow)" />
+    <text x="515" y="1922" class="step-label">18. onSendPinValue(pin, value)</text>
+    <text x="515" y="1952" class="step-meta">App encapsulates device write and log handling</text>
+
+    <line x1="740" y1="2012" x2="1580" y2="2012" stroke="#1f2933" stroke-width="3" marker-end="url(#arrow)" />
+    <text x="984" y="2000" class="step-label">19. POST /api/pins/:pin with text body</text>
+    <text x="984" y="2030" class="step-meta">Write request uses plain text payload such as 0, 1, or 255</text>
+
+    <line x1="1580" y1="2090" x2="740" y2="2090" stroke="#6b7280" stroke-width="3" stroke-dasharray="10 8" marker-end="url(#returnArrow)" />
+    <text x="1006" y="2078" class="step-label">20. Return 200 OK</text>
+    <text x="1006" y="2108" class="step-meta">App records a local success log entry</text>
+
+    <line x1="740" y1="2168" x2="1580" y2="2168" stroke="#1f2933" stroke-width="3" marker-end="url(#arrow)" />
+    <text x="972" y="2156" class="step-label">21. Re-probe status and logs</text>
+    <text x="972" y="2186" class="step-meta">Keeps live widget values aligned with the board state after a write</text>
+
+    <line x1="1580" y1="2246" x2="440" y2="2246" stroke="#6b7280" stroke-width="3" stroke-dasharray="10 8" marker-end="url(#returnArrow)" />
+    <text x="774" y="2234" class="step-label">22. Refresh telemetry and visible control state</text>
+    <text x="774" y="2264" class="step-meta">Buttons, sliders, quick controls, and logs all reflect the updated pin values</text>
+
+    <line x1="170" y1="2324" x2="440" y2="2324" stroke="#1f2933" stroke-width="3" marker-end="url(#arrow)" />
+    <text x="236" y="2312" class="step-label">23. Click Download sketch</text>
+    <text x="236" y="2342" class="step-meta">User exports the generated Arduino .ino file</text>
+
+    <line x1="440" y1="2402" x2="740" y2="2402" stroke="#1f2933" stroke-width="3" marker-end="url(#arrow)" />
+    <text x="520" y="2390" class="step-label">24. onDownload()</text>
+    <text x="520" y="2420" class="step-meta">SketchPanel delegates the export to App</text>
+
+    <line x1="740" y1="2480" x2="1790" y2="2480" stroke="#1f2933" stroke-width="3" marker-end="url(#arrow)" />
+    <text x="1094" y="2468" class="step-label">25. Create Blob, object URL, and anchor.click()</text>
+    <text x="1094" y="2498" class="step-meta">Browser starts the file download then revokes the URL</text>
+
+    <line x1="1790" y1="2558" x2="170" y2="2558" stroke="#6b7280" stroke-width="3" stroke-dasharray="10 8" marker-end="url(#returnArrow)" />
+    <text x="866" y="2546" class="step-label">26. .ino file becomes available to the user</text>
+    <text x="866" y="2576" class="step-meta">Downloaded sketch mirrors configured Wi-Fi, routes, pins, OTA, mDNS, and logging options</text>
+  </g>
+
+  <g>
+    <rect x="1180" y="1340" width="602" height="234" rx="18" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2" />
+    <text x="1204" y="1372" class="note-title">Failure handling observed in App.tsx</text>
+    <text x="1204" y="1412" class="note-text">If GET /api/status fails, App marks the device offline,</text>
+    <text x="1204" y="1438" class="note-text">stores the error message in status.message, and prepends</text>
+    <text x="1204" y="1464" class="note-text">a synthetic error log entry to the in-memory logs array.</text>
+    <text x="1204" y="1510" class="note-text">This means the runtime UI can still explain connectivity</text>
+    <text x="1204" y="1536" class="note-text">problems even when the ESP32 returns no log payload.</text>
+  </g>
+
+  <g>
+    <rect x="68" y="1834" width="920" height="136" rx="18" fill="#fff7e8" stroke="#eab308" stroke-width="2" />
+    <text x="94" y="1866" class="note-title">Export path</text>
+    <text x="94" y="1902" class="note-text">When the user clicks Download in SketchPanel, App creates a Blob from the generated sketch,</text>
+    <text x="94" y="1928" class="note-text">creates an object URL, programmatically clicks an anchor, and revokes the URL after the download starts.</text>
+    <text x="94" y="1954" class="note-text">The downloaded artifact is an Arduino .ino file whose routes mirror the configured pins and features.</text>
+  </g>
+
+  <g>
+    <rect x="1028" y="1834" width="754" height="136" rx="18" fill="#eefbf3" stroke="#5bbf8a" stroke-width="2" />
+    <text x="1054" y="1866" class="note-title">Packaging context</text>
+    <text x="1054" y="1902" class="note-text">Separate scripts handle deployment artifacts: quick:package-and-dev runs build:web, package:mobile, then dev:web.</text>
+    <text x="1054" y="1928" class="note-text">package-mobile copies dist into package/mobile-app/www for Capacitor/Cordova-style wrapping.</text>
+    <text x="1054" y="1954" class="note-text">That build path is related project flow, but not part of the live runtime sequence shown above.</text>
+  </g>
+
+  <text x="68" y="2648" class="footer">Sequence focus: runtime state ownership in App.tsx, persistence in localStorage, device I/O over HTTP, and sketch/export derivation from config.</text>
+  <text x="68" y="2670" class="footer">Project files analyzed: src/App.tsx, src/components/*.tsx, src/lib/storage.ts, src/lib/sketch.ts, scripts/package-mobile.mjs, scripts/quick-package-and-dev.mjs.</text>
+</svg>

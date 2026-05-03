@@ -1,0 +1,10 @@
+{
+  "name": "ASAR Control Studio Mobile Package",
+  "generatedAt": "2026-05-03T15:10:42.186Z",
+  "source": "dist",
+  "target": "package/mobile-app/www",
+  "notes": [
+    "This folder contains the mobile-ready web bundle.",
+    "Use Capacitor, Cordova, or another WebView wrapper to build native apps."
+  ]
+}
