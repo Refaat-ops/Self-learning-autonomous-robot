@@ -18,6 +18,23 @@ function Run-Step {
   }
 }
 
+function Get-JavaMajorVersion {
+  param(
+    [Parameter(Mandatory = $true)]
+    [string]$JavaExe
+  )
+
+  $javaVersionCommand = "`"$JavaExe`" -version 2>&1"
+  $javaVersionText = cmd /c $javaVersionCommand
+  $javaVersionLine = $javaVersionText | Select-Object -First 1
+  if ($javaVersionLine -match '"([0-9]+)\.([0-9]+).*"') {
+    $major = if ($Matches[1] -eq '1') { [int]$Matches[2] } else { [int]$Matches[1] }
+    return @($major, $javaVersionLine)
+  }
+
+  return @(0, $javaVersionLine)
+}
+
 try {
   Run-Step -Label 'Build web bundle' -Command 'npm run build:web'
   Run-Step -Label 'Create mobile package folder' -Command 'npm run package:mobile'
@@ -40,32 +57,73 @@ try {
   try {
     $oldJavaHome = $env:JAVA_HOME
     $oldPath = $env:PATH
-    $androidStudioJbr = Join-Path ${env:ProgramFiles} 'Android\Android Studio\jbr'
-    $androidStudioJava = Join-Path $androidStudioJbr 'bin\java.exe'
 
-    if (Test-Path $androidStudioJava) {
-      $env:JAVA_HOME = $androidStudioJbr
-      $env:PATH = "$androidStudioJbr\bin;$oldPath"
+    $javaHomesToTry = @()
+    if ($env:JAVA_HOME) {
+      $javaHomesToTry += $env:JAVA_HOME
     }
 
-    $javaExe = if ($env:JAVA_HOME -and (Test-Path (Join-Path $env:JAVA_HOME 'bin\java.exe'))) {
+    foreach ($basePath in @($env:ProgramW6432, $env:ProgramFiles, ${env:ProgramFiles(x86)})) {
+      if ($basePath) {
+        $javaHomesToTry += (Join-Path $basePath 'Android\Android Studio\jbr')
+      }
+    }
+
+    if ($env:LOCALAPPDATA) {
+      $javaHomesToTry += (Join-Path $env:LOCALAPPDATA 'Programs\Android Studio\jbr')
+      $javaHomesToTry += (Get-ChildItem -Path (Join-Path $env:LOCALAPPDATA 'Programs\Eclipse Adoptium') -Directory -Filter 'jdk*' -ErrorAction SilentlyContinue | ForEach-Object { $_.FullName })
+      $javaHomesToTry += (Get-ChildItem -Path (Join-Path $env:LOCALAPPDATA 'JetBrains') -Directory -ErrorAction SilentlyContinue | ForEach-Object {
+          Join-Path $_.FullName 'jbr'
+        })
+    }
+
+    $selectedJavaHome = $null
+    $selectedJavaExe = $null
+    $selectedJavaVersionLine = $null
+
+    foreach ($javaHome in ($javaHomesToTry | Select-Object -Unique)) {
+      if (-not $javaHome) {
+        continue
+      }
+
+      $candidateJava = Join-Path $javaHome 'bin\java.exe'
+      if (-not (Test-Path $candidateJava)) {
+        continue
+      }
+
+      $versionInfo = Get-JavaMajorVersion -JavaExe $candidateJava
+      $candidateMajor = [int]$versionInfo[0]
+      $candidateLine = [string]$versionInfo[1]
+      if ($candidateMajor -ge 11) {
+        $selectedJavaHome = $javaHome
+        $selectedJavaExe = $candidateJava
+        $selectedJavaVersionLine = $candidateLine
+        break
+      }
+    }
+
+    if ($selectedJavaHome) {
+      $env:JAVA_HOME = $selectedJavaHome
+      $env:PATH = "$selectedJavaHome\bin;$oldPath"
+    }
+
+    $javaExe = if ($selectedJavaExe) {
+      $selectedJavaExe
+    }
+    elseif ($env:JAVA_HOME -and (Test-Path (Join-Path $env:JAVA_HOME 'bin\java.exe'))) {
       Join-Path $env:JAVA_HOME 'bin\java.exe'
     }
     else {
       'java'
     }
 
-    $javaVersionCommand = "`"$javaExe`" -version 2>&1"
-    $javaVersionText = cmd /c $javaVersionCommand
-    $javaVersionLine = $javaVersionText | Select-Object -First 1
-    if ($javaVersionLine -match '"([0-9]+)\.([0-9]+).*"') {
-      $major = if ($Matches[1] -eq '1') { [int]$Matches[2] } else { [int]$Matches[1] }
+    if (-not $selectedJavaVersionLine) {
+      $versionInfo = Get-JavaMajorVersion -JavaExe $javaExe
+      $major = [int]$versionInfo[0]
+      $javaVersionLine = [string]$versionInfo[1]
       if ($major -lt 11) {
         throw "Java 11+ is required for Android Gradle plugin. Current: $javaVersionLine. Install Android Studio or JDK 17 and re-run the script."
       }
-    }
-    else {
-      throw "Unable to detect Java version from: $javaVersionLine"
     }
 
     $oldJavaToolOptions = $env:JAVA_TOOL_OPTIONS

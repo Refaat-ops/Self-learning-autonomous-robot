@@ -44,8 +44,30 @@ echo ==> Build Android debug APK
 pushd android
 set "_ASAR_JAVA_HOME=%JAVA_HOME%"
 set "_ASAR_PATH=%PATH%"
-if exist "%ProgramFiles%\Android\Android Studio\jbr\bin\java.exe" (
-  set "JAVA_HOME=%ProgramFiles%\Android\Android Studio\jbr"
+set "_ASAR_STUDIO_JBR="
+if defined ProgramW6432 if exist "%ProgramW6432%\Android\Android Studio\jbr\bin\java.exe" set "_ASAR_STUDIO_JBR=%ProgramW6432%\Android\Android Studio\jbr"
+if not defined _ASAR_STUDIO_JBR if exist "%ProgramFiles%\Android\Android Studio\jbr\bin\java.exe" set "_ASAR_STUDIO_JBR=%ProgramFiles%\Android\Android Studio\jbr"
+if not defined _ASAR_STUDIO_JBR if defined ProgramFiles(x86) if exist "%ProgramFiles(x86)%\Android\Android Studio\jbr\bin\java.exe" set "_ASAR_STUDIO_JBR=%ProgramFiles(x86)%\Android\Android Studio\jbr"
+if not defined _ASAR_STUDIO_JBR if defined LOCALAPPDATA if exist "%LOCALAPPDATA%\Programs\Android Studio\jbr\bin\java.exe" set "_ASAR_STUDIO_JBR=%LOCALAPPDATA%\Programs\Android Studio\jbr"
+if not defined _ASAR_STUDIO_JBR if defined LOCALAPPDATA (
+  for /d %%J in ("%LOCALAPPDATA%\Programs\Eclipse Adoptium\jdk*") do (
+    if exist "%%~fJ\bin\java.exe" (
+      set "_ASAR_STUDIO_JBR=%%~fJ"
+      goto :java_home_found
+    )
+  )
+)
+if not defined _ASAR_STUDIO_JBR if defined LOCALAPPDATA (
+  for /d %%J in ("%LOCALAPPDATA%\JetBrains\*") do (
+    if exist "%%~fJ\jbr\bin\java.exe" (
+      set "_ASAR_STUDIO_JBR=%%~fJ\jbr"
+      goto :java_home_found
+    )
+  )
+)
+:java_home_found
+if defined _ASAR_STUDIO_JBR (
+  set "JAVA_HOME=%_ASAR_STUDIO_JBR%"
 )
 if defined JAVA_HOME if exist "%JAVA_HOME%\bin\java.exe" (
   set "PATH=%JAVA_HOME%\bin;%PATH%"
@@ -55,7 +77,19 @@ set "_ASAR_JAVA_EXE=java"
 if defined JAVA_HOME if exist "%JAVA_HOME%\bin\java.exe" set "_ASAR_JAVA_EXE=%JAVA_HOME%\bin\java.exe"
 
 set "_ASAR_JAVA_MAJOR=0"
-for /f %%m in ('powershell -NoProfile -Command "$j = if ($env:JAVA_HOME -and (Test-Path (Join-Path $env:JAVA_HOME 'bin\\java.exe'))) { Join-Path $env:JAVA_HOME 'bin\\java.exe' } else { 'java' }; $line = & $j -version 2^>^&1 | Select-Object -First 1; if ($line -match '([0-9]+)\\.([0-9]+)') { if ($Matches[1] -eq '1') { $Matches[2] } else { $Matches[1] } } else { 0 }"') do set "_ASAR_JAVA_MAJOR=%%m"
+set "_ASAR_JAVA_SPEC="
+"%_ASAR_JAVA_EXE%" -XshowSettings:properties -version 1>nul 2>"%TEMP%\asar_java_props.txt"
+for /f "tokens=2 delims==" %%v in ('findstr /i /c:"java.specification.version =" "%TEMP%\asar_java_props.txt"') do set "_ASAR_JAVA_SPEC=%%v"
+del /q "%TEMP%\asar_java_props.txt" >nul 2>nul
+set "_ASAR_JAVA_SPEC=%_ASAR_JAVA_SPEC: =%"
+for /f "tokens=1,2 delims=." %%a in ("%_ASAR_JAVA_SPEC%") do (
+  if "%%a"=="1" (
+    set "_ASAR_JAVA_MAJOR=%%b"
+  ) else (
+    set "_ASAR_JAVA_MAJOR=%%a"
+  )
+)
+if not defined _ASAR_JAVA_MAJOR set "_ASAR_JAVA_MAJOR=0"
 
 if %_ASAR_JAVA_MAJOR% LSS 11 (
   echo.
@@ -79,6 +113,7 @@ set "JAVA_HOME=%_ASAR_JAVA_HOME%"
 set "_ASAR_JAVA_HOME="
 set "PATH=%_ASAR_PATH%"
 set "_ASAR_PATH="
+set "_ASAR_STUDIO_JBR="
 if errorlevel 1 (
   popd
   goto :fail

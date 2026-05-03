@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1760" height="1400" viewBox="0 0 1760 1400" role="img" aria-labelledby="svgtitle svgdesc">
+  <title id="svgtitle">ASAR Control Studio — Architecture Overview</title>
+  <desc id="svgdesc">Architecture diagram showing ASAR as a web application. Users configure ESP32 boards and choose between two mobile/remote access paths: Path A integrates Blynk Cloud for remote access via the Blynk mobile app; Path B uses Mobile App Studio to generate a custom Android APK whose widget layout is synced from ASAR.</desc>
+
+  <defs>
+    <linearGradient id="svgBg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f4f9ff"/>
+      <stop offset="100%" stop-color="#eaf2f7"/>
+    </linearGradient>
+    <linearGradient id="hdrMain" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#0d3d5a"/>
+      <stop offset="100%" stop-color="#1565c0"/>
+    </linearGradient>
+    <linearGradient id="hdrA" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#0d47a1"/>
+      <stop offset="100%" stop-color="#1976d2"/>
+    </linearGradient>
+    <linearGradient id="hdrB" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#1b5e20"/>
+      <stop offset="100%" stop-color="#2e7d32"/>
+    </linearGradient>
+    <linearGradient id="hdrC1" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#4527a0"/>
+      <stop offset="100%" stop-color="#7b1fa2"/>
+    </linearGradient>
+    <linearGradient id="hdrC2" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#bf360c"/>
+      <stop offset="100%" stop-color="#e65100"/>
+    </linearGradient>
+
+    <marker id="arrowBlue" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+      <path d="M 0 0 L 12 6 L 0 12 z" fill="#1976d2"/>
+    </marker>
+    <marker id="arrowGreen" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+      <path d="M 0 0 L 12 6 L 0 12 z" fill="#2e7d32"/>
+    </marker>
+    <marker id="arrowRed" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+      <path d="M 0 0 L 12 6 L 0 12 z" fill="#dd6b7b"/>
+    </marker>
+    <marker id="arrowPurple" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+      <path d="M 0 0 L 12 6 L 0 12 z" fill="#7c5ab8"/>
+    </marker>
+    <marker id="arrowAmber" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+      <path d="M 0 0 L 12 6 L 0 12 z" fill="#d4a72c"/>
+    </marker>
+    <marker id="arrowOrange" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+      <path d="M 0 0 L 12 6 L 0 12 z" fill="#e65100"/>
+    </marker>
+    <marker id="arrowGray" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+      <path d="M 0 0 L 12 6 L 0 12 z" fill="#6b7280"/>
+    </marker>
+
+    <style>
+      text { font-family: "Segoe UI", Arial, sans-serif; }
+      .main-title  { font-size: 27px; font-weight: 700; fill: #ffffff; }
+      .main-sub    { font-size: 13px; fill: #cce4f0; }
+      .zone-title  { font-size: 16px; font-weight: 700; fill: #ffffff; }
+      .zone-sub    { font-size: 11px; fill: rgba(255,255,255,0.82); }
+      .box-title   { font-size: 13px; font-weight: 700; fill: #1f2933; }
+      .box-text    { font-size: 12px; fill: #334e68; }
+      .box-code    { font-size: 11px; fill: #2d4a63; font-family: "Consolas","Courier New",monospace; }
+      .arrow-lbl   { font-size: 11px; font-weight: 600; fill: #1f2933; }
+      .footer-text { font-size: 12px; fill: #52606d; }
+      .badge       { font-size: 10px; font-weight: 700; fill: #ffffff; }
+      .legend-lbl  { font-size: 12px; fill: #334e68; }
+    </style>
+  </defs>
+
+  <!-- Canvas background -->
+  <rect x="0" y="0" width="1760" height="1400" fill="url(#svgBg)"/>
+
+  <!-- ═══════════════════════════════════════════════════ HEADER -->
+  <rect x="0" y="0" width="1760" height="108" rx="0" fill="url(#hdrMain)"/>
+  <text x="40" y="46" class="main-title">ASAR Control Studio — Architecture Overview</text>
+  <text x="40" y="72" class="main-sub">Web-first application: configure ESP32, then choose remote/mobile access via Blynk Cloud (Path A) or a generated Android APK (Path B)</text>
+  <text x="40" y="94" class="main-sub">Stack: React + Vite + TypeScript · Capacitor for Android packaging · ESP32 Arduino firmware generated from config</text>
+
+  <!-- ═══════════════════════════════════════ ZONE A — ASAR WEB APP -->
+  <!-- Zone background -->
+  <rect x="40" y="128" width="540" height="1100" rx="20" fill="#f0f7ff" stroke="#67b7dc" stroke-width="2"/>
+  <!-- Zone header (rounded-top bar) -->
+  <path d="M 60,128 Q 40,128 40,148 L 40,186 L 580,186 L 580,148 Q 580,128 560,128 Z" fill="url(#hdrA)"/>
+  <text x="60" y="158" class="zone-title">ASAR Web Application</text>
+  <text x="60" y="178" class="zone-sub">Runs in any browser · No native install · React + Vite + TypeScript</text>
+
+  <!-- Sub-box: Board Config Panel -->
+  <rect x="60" y="200" width="500" height="150" rx="12" fill="#dff3ff" stroke="#67b7dc" stroke-width="1.5"/>
+  <text x="80" y="225" class="box-title">Board Config Panel</text>
+  <text x="80" y="248" class="box-text">Board name, chip family, Wi-Fi SSID/password, hostname, server port, baud rate</text>
+  <text x="80" y="268" class="box-text">OTA · mDNS · logging · API base URL · poll interval</text>
+  <text x="80" y="291" class="box-code">enableBlynk · blynkTemplateId · blynkAuthToken · blynkServer:Port · heartbeatMs</text>
+  <text x="80" y="311" class="box-text">Pins: id, GPIO number, label, mode (INPUT/OUTPUT/PWM/ANALOG), blynkVPin</text>
+  <text x="80" y="333" class="box-text">Persisted to localStorage on every change · restored on page reload</text>
+
+  <!-- Sub-box: Sketch Panel -->
+  <rect x="60" y="368" width="500" height="114" rx="12" fill="#e8f9ee" stroke="#5bbf8a" stroke-width="1.5"/>
+  <text x="80" y="393" class="box-title">Sketch Panel — Arduino Code Generator</text>
+  <text x="80" y="415" class="box-text">generateSketch(config) → .ino text preview in the UI</text>
+  <text x="80" y="435" class="box-text">getSketchFileName(config) → project-name.ino</text>
+  <text x="80" y="455" class="box-text">Download: Blob → object URL → anchor.click() → .ino file to disk</text>
+  <text x="80" y="473" class="box-code">Includes Wi-Fi, HTTP routes, OTA, mDNS, pins, optional Blynk client</text>
+
+  <!-- Sub-box: Mobile App Studio -->
+  <rect x="60" y="498" width="500" height="162" rx="12" fill="#fff7e0" stroke="#d4a72c" stroke-width="1.5"/>
+  <text x="80" y="523" class="box-title">Mobile App Studio</text>
+  <text x="80" y="545" class="box-text">Visual widget dashboard builder (drag-and-drop, reorder)</text>
+  <text x="80" y="565" class="box-text">Widget kinds: Toggle · Push Button · Slider · Status Card · Logs Feed</text>
+  <text x="80" y="585" class="box-text">Each widget assigned to a GPIO pin, min/max values, action value</text>
+  <text x="80" y="605" class="box-text">Set app name, package ID, and target API base URL</text>
+  <text x="80" y="625" class="box-text">Exports widget config as package/mobile-app/package-info.json</text>
+  <text x="80" y="645" class="box-code">Scripts: package:mobile copies dist → package/mobile-app/www for APK build</text>
+
+  <!-- Sub-box: Device Panels (Live) -->
+  <rect x="60" y="676" width="500" height="130" rx="12" fill="#fff0f0" stroke="#dd6b7b" stroke-width="1.5"/>
+  <text x="80" y="701" class="box-title">Device Panels — Live Control</text>
+  <text x="80" y="723" class="box-text">Polls GET /api/status every pollIntervalMs → online, IP, RSSI, freeHeap, uptime, pins[]</text>
+  <text x="80" y="743" class="box-text">Polls GET /api/logs → log entries [{level, message, createdAt}]</text>
+  <text x="80" y="763" class="box-text">Sends POST /api/pins/:pin with plain-text value (0, 1, or 0–255 for PWM)</text>
+  <text x="80" y="783" class="box-text">Marks device offline on fetch failure; stores error in in-memory logs</text>
+  <text x="80" y="797" class="box-code">Connection states: idle → probing → online | offline</text>
+
+  <!-- Sub-box: localStorage -->
+  <rect x="60" y="822" width="500" height="92" rx="12" fill="#efe8ff" stroke="#9b7dd4" stroke-width="1.5"/>
+  <text x="80" y="847" class="box-title">localStorage (Persistence)</text>
+  <text x="80" y="869" class="box-text">Key: "asar-control-studio" → full BoardConfig JSON</text>
+  <text x="80" y="889" class="box-text">Key: "asar-mobile-app-studio:v1" → MobileStudioConfig JSON</text>
+  <text x="80" y="905" class="box-code">lib/storage.ts: loadConfig(default) / saveConfig(config)</text>
+
+  <!-- Sub-box: Web App advantages note -->
+  <rect x="60" y="930" width="500" height="178" rx="12" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="80" y="955" class="box-title">Why Web-First?</text>
+  <text x="80" y="977" class="box-text">· No install required — runs in Chrome, Edge, Firefox on any OS</text>
+  <text x="80" y="997" class="box-text">· Configuration always synced across sessions via localStorage</text>
+  <text x="80" y="1017" class="box-text">· Direct HTTP access to ESP32 on the same LAN (no backend needed)</text>
+  <text x="80" y="1037" class="box-text">· Use ASAR as the single source of truth for both firmware and mobile UI</text>
+  <text x="80" y="1057" class="box-text">· npm run dev: localhost dev server</text>
+  <text x="80" y="1077" class="box-text">· npm run build: static assets → deploy to any web host or serve locally</text>
+  <text x="80" y="1097" class="box-text">· Capacitor wraps the built assets into an APK for offline/sideloaded use</text>
+
+  <!-- ═══════════════════════════════════════ ZONE B — ESP32 FIRMWARE -->
+  <!-- Zone background -->
+  <rect x="620" y="128" width="440" height="1100" rx="20" fill="#f0fff6" stroke="#5bbf8a" stroke-width="2"/>
+  <!-- Zone header -->
+  <path d="M 640,128 Q 620,128 620,148 L 620,186 L 1060,186 L 1060,148 Q 1060,128 1040,128 Z" fill="url(#hdrB)"/>
+  <text x="640" y="158" class="zone-title">ESP32 Firmware Layer</text>
+  <text x="640" y="178" class="zone-sub">Arduino target · flashed via Arduino IDE or OTA · serves HTTP + optional Blynk</text>
+
+  <!-- Sub-box: Generated Arduino Sketch -->
+  <rect x="640" y="200" width="400" height="172" rx="12" fill="#e8f9ee" stroke="#5bbf8a" stroke-width="1.5"/>
+  <text x="660" y="225" class="box-title">Generated Arduino Sketch (.ino)</text>
+  <text x="660" y="247" class="box-text">Wi-Fi connect (SSID + password from config)</text>
+  <text x="660" y="267" class="box-text">HTTP server on configured port</text>
+  <text x="660" y="287" class="box-code">  GET /api/status, GET /api/logs, POST /api/pins/:pin</text>
+  <text x="660" y="307" class="box-text">Optional: OTA update endpoint · mDNS announce · serial logging</text>
+  <text x="660" y="327" class="box-text">Optional: Blynk client — BLYNK_TEMPLATE_ID, BLYNK_AUTH_TOKEN</text>
+  <text x="660" y="347" class="box-code">  Virtual pins V0–V255 mapped to PinDefinition.blynkVPin</text>
+  <text x="660" y="361" class="box-text">Pin setup/loop blocks derived from pins[] in BoardConfig</text>
+
+  <!-- Flash strip -->
+  <rect x="640" y="382" width="400" height="30" rx="6" fill="#e3f2fd" stroke="#90caf9" stroke-width="1"/>
+  <text x="660" y="402" class="box-code">▼ User flashes via Arduino IDE / OTA / esptool</text>
+
+  <!-- Sub-box: ESP32 Running Device -->
+  <rect x="640" y="422" width="400" height="774" rx="12" fill="#c8e6c9" stroke="#2e7d32" stroke-width="2"/>
+  <text x="660" y="449" class="box-title">ESP32 — Running Firmware</text>
+
+  <!-- HTTP API inner box -->
+  <rect x="656" y="460" width="368" height="208" rx="8" fill="#f0fff8" stroke="#4caf50" stroke-width="1.5"/>
+  <text x="672" y="481" class="box-title">HTTP API (Local LAN)</text>
+  <text x="672" y="501" class="box-code">GET  /api/status</text>
+  <text x="672" y="519" class="box-text">  → {online, ip, rssi, freeHeap, uptimeMs, board, pins[]}</text>
+  <text x="672" y="539" class="box-code">GET  /api/logs</text>
+  <text x="672" y="557" class="box-text">  → [{level, message, createdAt}]</text>
+  <text x="672" y="577" class="box-code">POST /api/pins/:pin  body: "0" | "1" | "0-255"</text>
+  <text x="672" y="597" class="box-text">  → 200 OK · writes GPIO / PWM channel</text>
+  <text x="672" y="617" class="box-text">  Polled by ASAR Device Panels every pollIntervalMs</text>
+  <text x="672" y="637" class="box-text">  Available on LAN · accessible by Android APK on same network</text>
+  <text x="672" y="656" class="box-code">  esp32.local (mDNS) or direct IP address</text>
+
+  <!-- Blynk Client inner box -->
+  <rect x="656" y="678" width="368" height="272" rx="8" fill="#ede7f6" stroke="#7c5ab8" stroke-width="1.5"/>
+  <text x="672" y="700" class="box-title">Blynk Client (enableBlynk = true)</text>
+  <text x="672" y="722" class="box-text">Persistent TCP/TLS connection to blynk.cloud:443</text>
+  <text x="672" y="742" class="box-text">Sends heartbeat every blynkHeartbeatMs</text>
+  <text x="672" y="762" class="box-text">BLYNK_TEMPLATE_ID + BLYNK_AUTH_TOKEN embedded at sketch gen</text>
+  <text x="672" y="782" class="box-code">Virtual pin mapping: V{pin.blynkVPin} ↔ GPIO {pin.pin}</text>
+  <text x="672" y="802" class="box-text">BLYNK_WRITE(Vn) handler: sets GPIO value on command from cloud</text>
+  <text x="672" y="822" class="box-text">Blynk.virtualWrite(Vn, value): pushes live sensor/pin state up</text>
+  <text x="672" y="842" class="box-text">Works over any network — ESP32 reaches blynk.cloud regardless</text>
+  <text x="672" y="862" class="box-text">of LAN topology (phone can be on 4G, ESP32 on home Wi-Fi)</text>
+  <text x="672" y="882" class="box-text">Both HTTP API and Blynk client run simultaneously when enabled</text>
+  <text x="672" y="916" class="box-code">Configured in BoardConfigPanel under "Blynk Integration" section</text>
+  <text x="672" y="938" class="box-text">Board config fields: blynkTemplateId, blynkTemplateName,</text>
+  <text x="672" y="958" class="box-text">  blynkAuthToken, blynkServer, blynkPort, blynkHeartbeatMs</text>
+
+  <!-- Pin state note inside device box -->
+  <rect x="656" y="962" width="368" height="72" rx="8" fill="#dcedc8" stroke="#558b2f" stroke-width="1"/>
+  <text x="672" y="984" class="box-title">Pin State</text>
+  <text x="672" y="1004" class="box-text">Physical GPIO/PWM written on POST /api/pins/:pin or Blynk BLYNK_WRITE</text>
+  <text x="672" y="1022" class="box-text">Pin values broadcast in /api/status response and Blynk virtual writes</text>
+
+  <!-- ═══════════════════════════════════════ ZONE C1 — BLYNK PATH -->
+  <!-- Zone background -->
+  <rect x="1100" y="128" width="620" height="568" rx="20" fill="#f5f0ff" stroke="#9b7dd4" stroke-width="2"/>
+  <!-- Zone header -->
+  <path d="M 1120,128 Q 1100,128 1100,148 L 1100,186 L 1720,186 L 1720,148 Q 1720,128 1700,128 Z" fill="url(#hdrC1)"/>
+  <text x="1120" y="155" class="zone-title">Path A — Blynk Remote Access</text>
+  <text x="1120" y="178" class="zone-sub">Remote control over the internet · no APK build needed · install Blynk App from store</text>
+
+  <!-- Badge -->
+  <rect x="1660" y="133" width="50" height="20" rx="6" fill="#ffffff" fill-opacity="0.25"/>
+  <text x="1665" y="147" class="badge">REMOTE</text>
+
+  <!-- Blynk Cloud box -->
+  <rect x="1120" y="200" width="580" height="162" rx="12" fill="#ede0ff" stroke="#9b7dd4" stroke-width="1.5"/>
+  <text x="1140" y="225" class="box-title">Blynk Cloud (blynk.cloud)</text>
+  <text x="1140" y="247" class="box-text">Managed cloud broker — stores real-time virtual pin state</text>
+  <text x="1140" y="267" class="box-text">Routes commands bidirectionally between ESP32 and Blynk mobile app</text>
+  <text x="1140" y="287" class="box-text">Transport: persistent TCP over TLS (port 443, configurable)</text>
+  <text x="1140" y="307" class="box-text">Device identified by BLYNK_TEMPLATE_ID + BLYNK_AUTH_TOKEN</text>
+  <text x="1140" y="327" class="box-text">Free tier available · no self-hosted server needed</text>
+  <text x="1140" y="347" class="box-code">Register at blynk.cloud → copy Template ID + Auth Token → paste into ASAR</text>
+
+  <!-- Blynk App box -->
+  <rect x="1120" y="378" width="580" height="278" rx="12" fill="#ddd0ff" stroke="#7c5ab8" stroke-width="1.5"/>
+  <text x="1140" y="403" class="box-title">Blynk Mobile App (iOS / Android)</text>
+  <text x="1140" y="425" class="box-text">Install from Apple App Store or Google Play Store — no APK build needed</text>
+  <text x="1140" y="445" class="box-text">Dashboard editor: drag-and-drop Button, Slider, Gauge, Value Display widgets</text>
+  <text x="1140" y="465" class="box-text">Each widget mapped to a Virtual Pin (V0–V255)</text>
+  <text x="1140" y="485" class="box-text">Widget value ↔ ESP32 GPIO value via cloud relay in real time</text>
+  <text x="1140" y="505" class="box-text">Works over any network — 4G, 5G, home Wi-Fi, mobile hotspot</text>
+  <text x="1140" y="525" class="box-text">Device does not need a public IP — ESP32 reaches out to blynk.cloud</text>
+  <text x="1140" y="545" class="box-text">Multiple devices and apps supported under one template</text>
+  <text x="1140" y="565" class="box-text">Blynk V-pin assignments are configured per pin inside ASAR BoardConfigPanel</text>
+  <text x="1140" y="585" class="box-code">PinDefinition.blynkVPin → V{n} in generated sketch and Blynk dashboard</text>
+  <text x="1140" y="605" class="box-text">Workflow: configure in ASAR → download sketch → flash ESP32 → open Blynk App</text>
+  <text x="1140" y="625" class="box-text">ASAR can still poll ESP32 HTTP API in parallel while Blynk is active</text>
+  <text x="1140" y="645" class="box-text">Use case: monitor sensors remotely, toggle outputs from anywhere in the world</text>
+
+  <!-- ═══════════════════════════════════════ ZONE C2 — APK PATH -->
+  <!-- Zone background -->
+  <rect x="1100" y="716" width="620" height="512" rx="20" fill="#fffbf0" stroke="#d4a72c" stroke-width="2"/>
+  <!-- Zone header -->
+  <path d="M 1120,716 Q 1100,716 1100,736 L 1100,774 L 1720,774 L 1720,736 Q 1720,716 1700,716 Z" fill="url(#hdrC2)"/>
+  <text x="1120" y="743" class="zone-title">Path B — Custom Android APK</text>
+  <text x="1120" y="766" class="zone-sub">Self-hosted mobile app · widget layout synced from ASAR Mobile App Studio · connects to ESP32 via HTTP</text>
+
+  <!-- Badge -->
+  <rect x="1658" y="721" width="52" height="20" rx="6" fill="#ffffff" fill-opacity="0.25"/>
+  <text x="1662" y="735" class="badge">LOCAL/LAN</text>
+
+  <!-- APK Package box -->
+  <rect x="1120" y="788" width="580" height="160" rx="12" fill="#fff3cc" stroke="#d4a72c" stroke-width="1.5"/>
+  <text x="1140" y="813" class="box-title">APK Package (Capacitor / Cordova)</text>
+  <text x="1140" y="835" class="box-text">Widget layout and app metadata synced from Mobile App Studio config</text>
+  <text x="1140" y="855" class="box-text">Build step: npm run build:web copies dist/ into package/mobile-app/www/</text>
+  <text x="1140" y="875" class="box-code">script: scripts/package-mobile.mjs + scripts/quick-package-and-dev.mjs</text>
+  <text x="1140" y="895" class="box-text">Capacitor config: capacitor.config.ts → android/ folder (Gradle project)</text>
+  <text x="1140" y="915" class="box-text">Build APK: cd android → gradlew assembleDebug or assembleRelease</text>
+  <text x="1140" y="935" class="box-code">quick-build-package-apk.ps1 / quick-build-package-apk.bat automate this</text>
+
+  <!-- Android App box -->
+  <rect x="1120" y="962" width="580" height="182" rx="12" fill="#ffe0b2" stroke="#e65100" stroke-width="1.5"/>
+  <text x="1140" y="987" class="box-title">Android Application (Sideloaded / Play Store)</text>
+  <text x="1140" y="1009" class="box-text">Connects to ESP32 HTTP API (/api/status, /api/logs, /api/pins/:pin)</text>
+  <text x="1140" y="1029" class="box-text">Requires ESP32 reachable over local Wi-Fi network or port-forwarded</text>
+  <text x="1140" y="1049" class="box-text">targetApiBaseUrl set in Mobile App Studio (e.g. http://192.168.x.x or http://esp32.local)</text>
+  <text x="1140" y="1069" class="box-text">Widget dashboard mirrors the layout designed in ASAR Mobile App Studio</text>
+  <text x="1140" y="1089" class="box-text">Fully offline-capable once installed — no cloud service required</text>
+  <text x="1140" y="1109" class="box-text">Use case: dedicated on-site tablet or phone permanently paired to ESP32</text>
+  <text x="1140" y="1129" class="box-text">Update app: rebuild APK in ASAR pipeline, reinstall on device</text>
+  <text x="1140" y="1149" class="box-code">packageId set in Mobile App Studio (e.g. com.asar.myproject)</text>
+  <text x="1140" y="1169" class="box-text">Advantage over Blynk APK: fully custom brand, no third-party cloud dependency</text>
+
+  <!-- ═══════════════════════════════════════ ARROWS -->
+
+  <!-- Arrow 1: SketchPanel → Generated Sketch -->
+  <!-- SketchPanel center-right: (560, 425) → Generated Sketch center-left: (640, 286) -->
+  <line x1="560" y1="422" x2="640" y2="292" stroke="#2e7d32" stroke-width="2.5" marker-end="url(#arrowGreen)"/>
+  <rect x="560" y="328" width="78" height="30" rx="5" fill="#f0fff8" fill-opacity="0.9"/>
+  <text x="563" y="340" class="arrow-lbl">generate</text>
+  <text x="563" y="353" class="arrow-lbl">Sketch()</text>
+
+  <!-- Arrow 2a: DevicePanels → ESP32 HTTP (GET poll) -->
+  <!-- DevicePanels right: (560, 720) → ESP32 HTTP inner left: (656, 541) -->
+  <line x1="560" y1="720" x2="656" y2="556" stroke="#dd6b7b" stroke-width="2.5" marker-end="url(#arrowRed)"/>
+  <rect x="562" y="625" width="90" height="30" rx="5" fill="#fff0f5" fill-opacity="0.9"/>
+  <text x="565" y="637" class="arrow-lbl">GET status</text>
+  <text x="565" y="650" class="arrow-lbl">GET logs</text>
+
+  <!-- Arrow 2b: ESP32 HTTP → DevicePanels (telemetry return) -->
+  <!-- ESP32 HTTP inner left: (656, 590) → DevicePanels right: (560, 755) -->
+  <line x1="656" y1="592" x2="562" y2="753" stroke="#6b7280" stroke-width="2" stroke-dasharray="8 5" marker-end="url(#arrowGray)"/>
+  <rect x="556" y="668" width="98" height="30" rx="5" fill="#f8f9fa" fill-opacity="0.9"/>
+  <text x="559" y="680" class="arrow-lbl">telemetry</text>
+  <text x="559" y="693" class="arrow-lbl">response</text>
+
+  <!-- Arrow 2c: DevicePanels → ESP32 HTTP (POST pin command) -->
+  <!-- (562, 757) → (656, 610) -->
+  <line x1="562" y1="758" x2="656" y2="616" stroke="#dd6b7b" stroke-width="2.5" stroke-dasharray="5 3" marker-end="url(#arrowRed)"/>
+  <rect x="558" y="690" width="98" height="16" rx="4" fill="#fff0f5" fill-opacity="0.9"/>
+  <text x="561" y="702" class="arrow-lbl">POST pin cmd</text>
+
+  <!-- Arrow 3: ESP32 Blynk → Blynk Cloud (through right-side gap at x=1078) -->
+  <!-- Start: (1040, 814) → gap vertical at x=1078 → Blynk Cloud left center: (1100, 281) -->
+  <path d="M 1040 814 L 1078 814 L 1078 281 L 1100 281" fill="none" stroke="#7c5ab8" stroke-width="2.5" marker-end="url(#arrowPurple)"/>
+  <rect x="1052" y="540" width="22" height="70" rx="4" fill="#f5f0ff" fill-opacity="0.92"/>
+  <text x="1055" y="560" class="arrow-lbl" transform="rotate(-90,1063,575)">Blynk TLS</text>
+  <text x="1044" y="802" class="arrow-lbl">Blynk</text>
+
+  <!-- Arrow 4: Blynk Cloud → Blynk App (short vertical) -->
+  <line x1="1410" y1="362" x2="1410" y2="378" stroke="#7c5ab8" stroke-width="2.5" marker-end="url(#arrowPurple)"/>
+  <text x="1416" y="374" class="arrow-lbl">real-time</text>
+
+  <!-- Arrow 5: MobileAppStudio → APK Package (curved bezier over Zone B) -->
+  <!-- MobileAppStudio right center: (560, 579) → APK Package left center: (1120, 868) -->
+  <path d="M 560 579 C 840 579 840 868 1120 868" fill="none" stroke="#d4a72c" stroke-width="2.5" marker-end="url(#arrowAmber)" stroke-dasharray="9 4"/>
+  <rect x="730" y="596" width="110" height="30" rx="5" fill="#fffbf0" fill-opacity="0.94"/>
+  <text x="734" y="609" class="arrow-lbl">sync config →</text>
+  <text x="734" y="622" class="arrow-lbl">build APK</text>
+
+  <!-- Arrow 6: Android App → ESP32 HTTP (through right-side gap at x=1078) -->
+  <!-- Start: (1120, 1052) → gap at x=1078 → up to y=541 → ESP32 HTTP inner right: (1040, 541) -->
+  <path d="M 1120 1052 L 1078 1052 L 1078 541 L 1040 541" fill="none" stroke="#e65100" stroke-width="2.5" marker-end="url(#arrowOrange)" stroke-dasharray="6 3"/>
+  <rect x="1052" y="770" width="22" height="70" rx="4" fill="#fffbf0" fill-opacity="0.92"/>
+  <text x="1055" y="790" class="arrow-lbl" transform="rotate(-90,1063,805)">HTTP /api/*</text>
+
+  <!-- ═══════════════════════════════════════ LEGEND -->
+  <rect x="40" y="1258" width="1680" height="108" rx="14" fill="#ffffff" stroke="#d9e2ec" stroke-width="1.5"/>
+  <text x="60" y="1282" class="box-title">Legend</text>
+
+  <!-- ASAR zone color chip -->
+  <rect x="60" y="1296" width="18" height="18" rx="4" fill="#1976d2"/>
+  <text x="85" y="1310" class="legend-lbl">ASAR Web App (React + Vite)</text>
+  <!-- ESP32 zone color chip -->
+  <rect x="290" y="1296" width="18" height="18" rx="4" fill="#2e7d32"/>
+  <text x="315" y="1310" class="legend-lbl">ESP32 Firmware (Arduino .ino)</text>
+  <!-- Blynk color chip -->
+  <rect x="540" y="1296" width="18" height="18" rx="4" fill="#7c5ab8"/>
+  <text x="565" y="1310" class="legend-lbl">Path A — Blynk Cloud (remote, any network)</text>
+  <!-- APK color chip -->
+  <rect x="860" y="1296" width="18" height="18" rx="4" fill="#e65100"/>
+  <text x="885" y="1310" class="legend-lbl">Path B — Custom Android APK (local LAN, no cloud)</text>
+
+  <!-- Arrow legend -->
+  <line x1="60" y1="1344" x2="100" y2="1344" stroke="#dd6b7b" stroke-width="2.5" marker-end="url(#arrowRed)"/>
+  <text x="108" y="1349" class="legend-lbl">HTTP poll / command (ASAR ↔ ESP32)</text>
+  <line x1="330" y1="1344" x2="370" y2="1344" stroke="#2e7d32" stroke-width="2.5" marker-end="url(#arrowGreen)"/>
+  <text x="378" y="1349" class="legend-lbl">Sketch generation / download</text>
+  <line x1="560" y1="1344" x2="600" y2="1344" stroke="#7c5ab8" stroke-width="2.5" marker-end="url(#arrowPurple)"/>
+  <text x="608" y="1349" class="legend-lbl">Blynk TLS heartbeat + V-pin sync</text>
+  <line x1="800" y1="1344" x2="840" y2="1344" stroke="#d4a72c" stroke-width="2.5" stroke-dasharray="9 4" marker-end="url(#arrowAmber)"/>
+  <text x="848" y="1349" class="legend-lbl">Config sync → APK build pipeline</text>
+  <line x1="1070" y1="1344" x2="1110" y2="1344" stroke="#e65100" stroke-width="2.5" stroke-dasharray="6 3" marker-end="url(#arrowOrange)"/>
+  <text x="1118" y="1349" class="legend-lbl">Android APK → ESP32 HTTP API (same LAN)</text>
+  <line x1="1370" y1="1344" x2="1410" y2="1344" stroke="#6b7280" stroke-width="2" stroke-dasharray="8 5" marker-end="url(#arrowGray)"/>
+  <text x="1418" y="1349" class="legend-lbl">Telemetry response (ESP32 → ASAR)</text>
+
+  <!-- ═══════════════════════════════════════ FOOTER -->
+  <text x="40" y="1382" class="footer-text">Source files: src/App.tsx · src/types.ts · src/components/BoardConfigPanel.tsx · src/components/MobileAppStudio.tsx · src/components/SketchPanel.tsx · src/components/DevicePanels.tsx · src/lib/sketch.ts · src/lib/storage.ts · capacitor.config.ts · scripts/package-mobile.mjs</text>
+  <text x="40" y="1398" class="footer-text">Architecture decision: ASAR is a web-first application. Blynk (Path A) enables zero-build remote access. Custom APK (Path B) provides offline, brandable mobile control without cloud dependency.</text>
+</svg>
